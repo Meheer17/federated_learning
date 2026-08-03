@@ -169,6 +169,28 @@ User sends message
 
 ---
 
+## ⚡ Quick Start Scripts
+
+Run the entire system end-to-end using the pre-configured automation scripts:
+
+### 1. Launch Backend Server & AWS S3 Infrastructure
+```bash
+./scripts/run_server.sh
+```
+- Automatically builds & runs Docker containers (FastAPI, PostgreSQL, Redis)
+- Configures AWS S3 storage environment
+- Runs health checks and outputs server endpoint URLs (`http://localhost:8000/health`)
+
+### 2. Launch Mobile App on Connected ADB Device / Emulator
+```bash
+./scripts/run_mobile.sh
+```
+- Automatically detects connected Android physical devices or emulators via `adb`
+- Sets up **ADB reverse port forwarding** (`8000 -> 8000`) so the phone reaches the host server at `http://localhost:8000`
+- Fetches dependencies and runs `flutter run` with hot-reload enabled
+
+---
+
 ## Getting Started
 
 ### Prerequisites
