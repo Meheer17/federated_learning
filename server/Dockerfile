@@ -8,11 +8,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY pyproject.toml .
-RUN pip install --no-cache-dir hatchling && pip install --no-cache-dir -e .
+# Copy pyproject.toml and source code
+COPY server/pyproject.toml /app/server/pyproject.toml
+COPY server /app/server
 
-COPY . /app/server
+WORKDIR /app/server
+RUN pip install --no-cache-dir hatchling && pip install --no-cache-dir .
 
 EXPOSE 8000
 
-CMD ["uvicorn", "server.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

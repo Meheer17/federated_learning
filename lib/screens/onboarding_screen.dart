@@ -15,6 +15,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   final List<_OnboardingSlide> _slides = const [
     _OnboardingSlide(
       icon: Icons.security_rounded,

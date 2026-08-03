@@ -1,8 +1,15 @@
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:federated_chat/services/privacy_guard.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   group('Phase 2 Unit Tests', () {
     test('PrivacyGuard gradient clipping bounds L2 norm', () {
       final guard = PrivacyGuard();

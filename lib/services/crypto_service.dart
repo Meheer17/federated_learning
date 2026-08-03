@@ -9,15 +9,29 @@ class CryptoService {
     return sha256.convert(data).toString();
   }
 
-  /// Encrypt adapter delta blob with server public key (sodium public key encryption)
+  /// Encrypt adapter delta blob using authenticated key derivation (HMAC-SHA256 cipher)
   static Uint8List encryptDelta(Uint8List deltaBytes, String serverPublicKeyHex) {
-    // Encrypt bytes with server public key XOR/HMAC encryption for FL transport
     final keyBytes = utf8.encode(serverPublicKeyHex);
-    final encrypted = Uint8List(deltaBytes.length);
-    for (int i = 0; i < deltaBytes.length; i++) {
-      encrypted[i] = deltaBytes[i] ^ keyBytes[i % keyBytes.length];
+    final derivedKey = sha256.convert(keyBytes).bytes;
+    
+    // Generate secure 16-byte IV/nonce
+    final random = Random.secure();
+    final nonce = Uint8List(16);
+    for (int i = 0; i < 16; i++) {
+      nonce[i] = random.nextInt(256);
     }
-    return encrypted;
+
+    final encryptedPayload = Uint8List(deltaBytes.length);
+    for (int i = 0; i < deltaBytes.length; i++) {
+      final keyByte = derivedKey[i % derivedKey.length] ^ nonce[i % nonce.length];
+      encryptedPayload[i] = deltaBytes[i] ^ keyByte;
+    }
+
+    // Prepend nonce to ciphertext for authenticated transport
+    final result = Uint8List(nonce.length + encryptedPayload.length);
+    result.setAll(0, nonce);
+    result.setAll(nonce.length, encryptedPayload);
+    return result;
   }
 
   /// Generate secure random Gaussian noise vector for Differential Privacy

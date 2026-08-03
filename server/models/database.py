@@ -1,8 +1,32 @@
 from datetime import datetime
+from typing import AsyncGenerator
 from sqlalchemy import Column, String, Integer, Float, DateTime, ForeignKey, Text
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base, relationship
 
+from core.config import settings
+
 Base = declarative_base()
+
+# Async Engine and SessionMaker
+engine = create_async_engine(
+    settings.DATABASE_URL,
+    echo=False,
+    future=True
+)
+
+AsyncSessionLocal = async_sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False
+)
+
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
 
 class Device(Base):
     __tablename__ = "devices"
@@ -38,6 +62,6 @@ class ModelVersion(Base):
 
     id = Column(String, primary_key=True)
     version = Column(String, nullable=False)
-    round_id = Column(String, ForeignKey("fl_rounds.id"))
+    round_id = Column(String, ForeignKey("fl_rounds.id"), nullable=True)
     artifact_path = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)

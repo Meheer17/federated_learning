@@ -1,11 +1,27 @@
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../app/constants.dart';
 import 'crypto_service.dart';
 
 class PrivacyGuard {
+  static const String _prefKeyEpsilon = 'privacy_cumulative_epsilon';
   double _cumulativeEpsilon = 0.0;
   final double maxBudgetEpsilon = 10.0;
+
+  PrivacyGuard() {
+    _loadStoredBudget();
+  }
+
+  Future<void> _loadStoredBudget() async {
+    final prefs = await SharedPreferences.getInstance();
+    _cumulativeEpsilon = prefs.getDouble(_prefKeyEpsilon) ?? 0.0;
+  }
+
+  Future<void> _saveBudget() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_prefKeyEpsilon, _cumulativeEpsilon);
+  }
 
   double get cumulativeEpsilon => _cumulativeEpsilon;
   double get remainingBudget => max(0.0, maxBudgetEpsilon - _cumulativeEpsilon);
@@ -54,13 +70,15 @@ class PrivacyGuard {
       noisyDelta[i] = noisyVal.clamp(0, 255);
     }
 
-    // Account for spent budget
+    // Account for spent budget and persist
     _cumulativeEpsilon += epsilonPerRound;
+    _saveBudget();
 
     return noisyDelta;
   }
 
-  void resetPrivacyBudget() {
+  Future<void> resetPrivacyBudget() async {
     _cumulativeEpsilon = 0.0;
+    await _saveBudget();
   }
 }

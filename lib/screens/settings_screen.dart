@@ -5,11 +5,19 @@ import '../app/theme.dart';
 import '../models/model_info.dart';
 import '../providers/app_provider.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool _isDownloading = false;
+  double _downloadProgress = 0.0;
+
+  @override
+  Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
     final flConsent = ref.watch(flConsentProvider);
     final modelInfoAsync = ref.watch(modelInfoProvider);
@@ -23,7 +31,7 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           _buildSectionHeader("Local Model Status"),
           modelInfoAsync.when(
-            data: (modelInfo) => _buildModelCard(context, ref, modelInfo),
+            data: (modelInfo) => _buildModelCard(context, modelInfo),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => Text("Error: $err"),
           ),
@@ -73,7 +81,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildModelCard(BuildContext context, WidgetRef ref, ModelInfo modelInfo) {
+  Widget _buildModelCard(BuildContext context, ModelInfo modelInfo) {
     final isReady = modelInfo.status == ModelStatus.ready;
 
     return Card(
@@ -92,9 +100,15 @@ class SettingsScreen extends ConsumerWidget {
                     children: [
                       Text(modelInfo.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                       Text(
-                        isReady ? "Ready (~1.0 GB)" : "Not Downloaded",
+                        isReady
+                            ? "Ready (~1.0 GB)"
+                            : (_isDownloading
+                                ? "Downloading (${(_downloadProgress * 100).toStringAsFixed(1)}%)"
+                                : "Not Downloaded"),
                         style: TextStyle(
-                          color: isReady ? Colors.greenAccent : Colors.amberAccent,
+                          color: isReady
+                              ? Colors.greenAccent
+                              : (_isDownloading ? Colors.cyanAccent : Colors.amberAccent),
                           fontSize: 12,
                         ),
                       ),
@@ -104,16 +118,42 @@ class SettingsScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 12),
-            if (!isReady)
+            if (_isDownloading)
+              LinearProgressIndicator(value: _downloadProgress, color: AppTheme.primaryViolet),
+            if (!isReady && !_isDownloading)
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryViolet),
                 icon: const Icon(Icons.download, color: Colors.white),
                 label: const Text("Download Model (HuggingFace)", style: TextStyle(color: Colors.white)),
                 onPressed: () {
+                  setState(() {
+                    _isDownloading = true;
+                    _downloadProgress = 0.0;
+                  });
+
                   ref.read(modelManagerProvider).downloadModel(
-                    onProgress: (p) {},
-                    onCompleted: () => ref.refresh(modelInfoProvider),
-                    onError: (e) {},
+                    onProgress: (p) {
+                      if (mounted) {
+                        setState(() => _downloadProgress = p);
+                      }
+                    },
+                    onCompleted: () {
+                      if (mounted) {
+                        setState(() => _isDownloading = false);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Model download completed!")),
+                        );
+                        ref.invalidate(modelInfoProvider);
+                      }
+                    },
+                    onError: (e) {
+                      if (mounted) {
+                        setState(() => _isDownloading = false);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Download failed: $e")),
+                        );
+                      }
+                    },
                   );
                 },
               ),

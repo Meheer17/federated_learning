@@ -1,3 +1,4 @@
+import 'package:sqflite_sqlcipher/sqflite.dart';
 import '../database/database_helper.dart';
 import '../models/message.dart';
 import '../models/user_profile.dart';
@@ -107,7 +108,7 @@ class StyleAnalyzer {
       await db.insert(
         'user_profile',
         {'key': entry.key, 'value': entry.value},
-        conflictAlgorithm: null,
+        conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
   }

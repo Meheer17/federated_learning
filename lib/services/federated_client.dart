@@ -13,7 +13,10 @@ class FederatedClient {
   final AdapterManager _adapterManager = AdapterManager();
 
   String? _deviceId;
+  String? _serverPublicKey;
+
   String get deviceId => _deviceId ??= const Uuid().v4();
+  String get serverPublicKey => _serverPublicKey ?? 'FEDCHAT_SERVER_PUBLIC_KEY_X25519_2026';
 
   /// Check user opt-in consent before participating
   Future<bool> isConsentGiven() async {
@@ -21,18 +24,43 @@ class FederatedClient {
     return prefs.getBool(AppConstants.flConsentKey) ?? false;
   }
 
+  /// Set user opt-in consent state
+  Future<void> setConsent(bool optIn) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(AppConstants.flConsentKey, optIn);
+  }
+
   /// Register device anonymously with FL server
   Future<bool> registerDevice({String? serverUrl}) async {
     try {
-      final url = '${serverUrl ?? AppConstants.defaultFlServerUrl}/devices/register';
-      final response = await _dio.post(url, data: {
+      final baseUrl = serverUrl ?? AppConstants.defaultFlServerUrl;
+      final response = await _dio.post('$baseUrl/devices/register', data: {
         'device_id': deviceId,
         'public_key': 'FEDCHAT_PUBKEY_$deviceId',
       });
-      return response.statusCode == 200 || response.statusCode == 201;
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (response.data != null && response.data['server_public_key'] != null) {
+          _serverPublicKey = response.data['server_public_key'];
+        }
+        return true;
+      }
+      return false;
     } catch (e) {
       return false;
     }
+  }
+
+  /// Get active FL round details
+  Future<Map<String, dynamic>?> getCurrentRound({String? serverUrl}) async {
+    try {
+      final baseUrl = serverUrl ?? AppConstants.defaultFlServerUrl;
+      final response = await _dio.get('$baseUrl/rounds/current');
+      if (response.statusCode == 200) {
+        return response.data as Map<String, dynamic>;
+      }
+    } catch (_) {}
+    return null;
   }
 
   /// Participate in an active FL round
@@ -59,7 +87,7 @@ class FederatedClient {
       final noisyDelta = _privacyGuard.applyDifferentialPrivacy(rawDelta);
 
       // 3. Encrypt noisy delta with server public key
-      final encryptedBlob = CryptoService.encryptDelta(noisyDelta, 'SERVER_PUB_KEY_SECRET');
+      final encryptedBlob = CryptoService.encryptDelta(noisyDelta, serverPublicKey);
 
       // 4. Submit encrypted blob to FL server endpoint
       final baseUrl = serverUrl ?? AppConstants.defaultFlServerUrl;

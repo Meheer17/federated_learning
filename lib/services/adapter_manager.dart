@@ -36,4 +36,13 @@ class AdapterManager {
     }
     return delta;
   }
+
+  /// Delete all stored local adapter files
+  Future<void> deleteAdapter() async {
+    final docsDir = await getApplicationDocumentsDirectory();
+    final dir = Directory(join(docsDir.path, 'adapters'));
+    if (await dir.exists()) {
+      await dir.delete(recursive: true);
+    }
+  }
 }

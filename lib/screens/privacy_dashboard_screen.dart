@@ -11,6 +11,11 @@ class PrivacyDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final flConsent = ref.watch(flConsentProvider);
+    final privacyGuard = ref.watch(privacyGuardProvider);
+    final adapterManager = ref.watch(adapterManagerProvider);
+
+    final currentEpsilon = privacyGuard.cumulativeEpsilon;
+    final maxEpsilon = privacyGuard.maxBudgetEpsilon;
 
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +73,7 @@ class PrivacyDashboardScreen extends ConsumerWidget {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 16),
-                  const PrivacyBudgetGauge(currentEpsilon: 2.5, maxEpsilon: 10.0),
+                  PrivacyBudgetGauge(currentEpsilon: currentEpsilon, maxEpsilon: maxEpsilon),
                   const SizedBox(height: 12),
                   Text(
                     "Calibrated Gaussian Noise is added to weight deltas before transmission to guarantee ε-DP privacy.",
@@ -107,11 +112,16 @@ class PrivacyDashboardScreen extends ConsumerWidget {
                       ),
                       icon: const Icon(Icons.delete_forever),
                       label: const Text("Delete All Local FL Data & Revoke Consent"),
-                      onPressed: () {
+                      onPressed: () async {
                         ref.read(flConsentProvider.notifier).toggleConsent(false);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("All local FL adapter deltas deleted and consent revoked.")),
-                        );
+                        await adapterManager.deleteAdapter();
+                        await privacyGuard.resetPrivacyBudget();
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("All local FL adapter deltas deleted and DP budget reset.")),
+                          );
+                        }
                       },
                     ),
                   ),

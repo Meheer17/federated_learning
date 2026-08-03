@@ -4,9 +4,13 @@ import '../database/chat_repository.dart';
 import '../models/conversation.dart';
 import '../models/message.dart';
 import '../services/llm_service.dart';
+import '../services/personalization_engine.dart';
+import '../services/style_analyzer.dart';
 
 final chatRepositoryProvider = Provider<ChatRepository>((ref) => ChatRepository());
 final llmServiceProvider = Provider<LlmService>((ref) => LlmService());
+final styleAnalyzerProvider = Provider<StyleAnalyzer>((ref) => StyleAnalyzer());
+final personalizationEngineProvider = Provider<PersonalizationEngine>((ref) => PersonalizationEngine());
 
 final conversationsProvider = StateNotifierProvider<ConversationsNotifier, List<Conversation>>((ref) {
   return ConversationsNotifier(ref.watch(chatRepositoryProvider));
@@ -46,6 +50,7 @@ final messagesProvider = StateNotifierProvider.family<MessagesNotifier, List<Cha
   return MessagesNotifier(
     ref.watch(chatRepositoryProvider),
     ref.watch(llmServiceProvider),
+    ref.watch(styleAnalyzerProvider),
     conversationId,
   );
 });
@@ -53,9 +58,10 @@ final messagesProvider = StateNotifierProvider.family<MessagesNotifier, List<Cha
 class MessagesNotifier extends StateNotifier<List<ChatMessage>> {
   final ChatRepository _repository;
   final LlmService _llmService;
+  final StyleAnalyzer _styleAnalyzer;
   final String conversationId;
 
-  MessagesNotifier(this._repository, this._llmService, this.conversationId) : super([]) {
+  MessagesNotifier(this._repository, this._llmService, this._styleAnalyzer, this.conversationId) : super([]) {
     loadMessages();
   }
 
@@ -75,6 +81,9 @@ class MessagesNotifier extends StateNotifier<List<ChatMessage>> {
     // Save & add User Message
     await _repository.insertMessage(userMsg);
     state = [...state, userMsg];
+
+    // Trigger background style analysis for personalization
+    _styleAnalyzer.analyzeUserMessages(state);
 
     // Create assistant message placeholder
     final assistantMsgId = const Uuid().v4();

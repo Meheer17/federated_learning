@@ -3,9 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../app/constants.dart';
 import '../models/model_info.dart';
+import '../services/adapter_manager.dart';
+import '../services/federated_client.dart';
 import '../services/model_manager.dart';
+import '../services/privacy_guard.dart';
 
 final modelManagerProvider = Provider<ModelManager>((ref) => ModelManager());
+final privacyGuardProvider = Provider<PrivacyGuard>((ref) => PrivacyGuard());
+final adapterManagerProvider = Provider<AdapterManager>((ref) => AdapterManager());
+final federatedClientProvider = Provider<FederatedClient>((ref) => FederatedClient());
 
 final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
   return ThemeModeNotifier();

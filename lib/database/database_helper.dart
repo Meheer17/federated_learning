@@ -36,7 +36,13 @@ class DatabaseHelper {
       path,
       password: passphrase,
       version: 1,
+      onConfigure: (db) async {
+        await db.execute('PRAGMA foreign_keys = ON;');
+      },
       onCreate: _createDB,
+      onUpgrade: (db, oldVersion, newVersion) async {
+        // Version migration logic
+      },
     );
   }
 
