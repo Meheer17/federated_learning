@@ -13,7 +13,8 @@ COPY server/pyproject.toml /app/server/pyproject.toml
 COPY server /app/server
 
 WORKDIR /app/server
-RUN pip install --no-cache-dir hatchling && pip install --no-cache-dir .
+RUN pip install --no-cache-dir hatchling && \
+    pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu .
 
 EXPOSE 8000
 
