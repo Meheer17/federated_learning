@@ -1,0 +1,84 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.idea/
+.project
+.vscode/
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+ephemeral/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/app.flttmp
+ios/Flutter/app.fltzip
+ios/Runner/GeneratedPluginRegistrant.h
+ios/Runner/GeneratedPluginRegistrant.m
+lib/generated_plugin_registrant.dart
+pubspec.lock
+
+# Android
+.gradle/
+app/build/
+gradle/
+gradlew
+gradlew.bat
+local.properties
+
+# C / Native binaries & dynamic libraries
+*.so
+*.dylib
+*.dll
+*.a
+*.o
+*.obj
+native/build/
+
+# GGUF / LLM Weights & Adapters
+*.gguf
+*.bin
+models/*.gguf
+models/*.bin
+
+# Encrypted SQLite DB & Secure Storage local artifacts
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Python / FL Server
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+server/.env
+server/data/
+server/mlruns/
+server/minio_data/
+server/postgres_data/
+
+# Environment Variables
+.env
+.env.local

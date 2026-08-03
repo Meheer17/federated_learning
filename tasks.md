@@ -2,7 +2,7 @@
 
 > **Project**: Flutter + Federated Learning On-Device LLM Chat Assistant  
 > **Tech Stack**: Flutter (Dart) · llama.cpp (dart:ffi) · Flower (flwr) · FastAPI · Docker  
-> **Status**: 📋 Planning  
+> **Status**: 🟢 Phase 1 Complete (Phase 2 In Progress)  
 > **Last Updated**: 2026-08-03
 
 ---
@@ -10,9 +10,9 @@
 ## Phase 1 — Core Chat App with On-Device Inference (Weeks 1–3)
 
 ### 1.1 Project Scaffolding
-- [ ] Create Flutter project (`flutter create --org com.federated --project-name federated_chat ./`)
-- [ ] Configure `analysis_options.yaml` with strict linting rules
-- [ ] Set up project folder structure:
+- [x] Create Flutter project (`flutter create --org com.federated --project-name federated_chat ./`)
+- [x] Configure `analysis_options.yaml` with strict linting rules
+- [x] Set up project folder structure:
   ```
   lib/
   ├── app/           # router, theme, constants
@@ -25,146 +25,146 @@
   ├── native/        # dart:ffi bindings
   └── utils/         # helpers, extensions
   ```
-- [ ] Install core dependencies in `pubspec.yaml`:
-  - [ ] `flutter_riverpod` (state management)
-  - [ ] `go_router` (navigation)
-  - [ ] `flutter_chat_ui` / `flutter_chat_types` (Flyer Chat)
-  - [ ] `sqflite_sqlcipher` (encrypted SQLite)
-  - [ ] `dio` (HTTP client)
-  - [ ] `workmanager` (background tasks)
-  - [ ] `google_fonts` (typography)
-  - [ ] `flutter_secure_storage` (secure key storage)
-  - [ ] `path_provider` (file paths)
-  - [ ] `uuid` (unique IDs)
-- [ ] Set up `flutter_llama` or custom `dart:ffi` bindings to `llama.cpp`
-- [ ] Verify project builds on Android emulator (`flutter run`)
+- [x] Install core dependencies in `pubspec.yaml`:
+  - [x] `flutter_riverpod` (state management)
+  - [x] `go_router` (navigation)
+  - [x] `flutter_chat_ui` / `flutter_chat_types` (Flyer Chat)
+  - [x] `sqflite_sqlcipher` (encrypted SQLite)
+  - [x] `dio` (HTTP client)
+  - [x] `workmanager` (background tasks)
+  - [x] `google_fonts` (typography)
+  - [x] `flutter_secure_storage` (secure key storage)
+  - [x] `path_provider` (file paths)
+  - [x] `uuid` (unique IDs)
+- [x] Set up `flutter_llama` or custom `dart:ffi` bindings to `llama.cpp`
+- [x] Verify project builds on Android emulator (`flutter run`)
 
 ### 1.2 App Shell & Navigation
-- [ ] Create `lib/main.dart` — `ProviderScope` → `MaterialApp.router`
-- [ ] Create `lib/app/router.dart` — `GoRouter` with routes:
-  - [ ] `/onboarding` (first-launch)
-  - [ ] `/chats` (conversation list — home)
-  - [ ] `/chat/:id` (chat screen)
-  - [ ] `/settings` (settings)
-  - [ ] `/privacy` (privacy dashboard)
-- [ ] Create `lib/app/theme.dart`
-  - [ ] Material 3 `ThemeData` with `ColorScheme` (dark + light)
-  - [ ] Custom typography using Google Fonts (Inter or Outfit)
-  - [ ] Reusable component themes (cards, buttons, inputs)
-- [ ] Create `lib/app/constants.dart` — app-wide constants
+- [x] Create `lib/main.dart` — `ProviderScope` → `MaterialApp.router`
+- [x] Create `lib/app/router.dart` — `GoRouter` with routes:
+  - [x] `/onboarding` (first-launch)
+  - [x] `/chats` (conversation list — home)
+  - [x] `/chat/:id` (chat screen)
+  - [x] `/settings` (settings)
+  - [x] `/privacy` (privacy dashboard)
+- [x] Create `lib/app/theme.dart`
+  - [x] Material 3 `ThemeData` with `ColorScheme` (dark + light)
+  - [x] Custom typography using Google Fonts (Inter or Outfit)
+  - [x] Reusable component themes (cards, buttons, inputs)
+- [x] Create `lib/app/constants.dart` — app-wide constants
 
 ### 1.3 Onboarding Flow
-- [ ] Build `lib/screens/onboarding_screen.dart`
-  - [ ] `PageView` with privacy explanation slides:
-    - [ ] Slide 1: "Your data stays on your device"
-    - [ ] Slide 2: "AI that learns your style locally"
-    - [ ] Slide 3: "Optional: Help improve AI for everyone (FL opt-in)"
-  - [ ] Model download consent button
-  - [ ] Storage permission request
-  - [ ] Initial user preferences (name, tone preference)
-- [ ] Persist onboarding completion in `SharedPreferences`
+- [x] Build `lib/screens/onboarding_screen.dart`
+  - [x] `PageView` with privacy explanation slides:
+    - [x] Slide 1: "Your data stays on your device"
+    - [x] Slide 2: "AI that learns your style locally"
+    - [x] Slide 3: "Optional: Help improve AI for everyone (FL opt-in)"
+  - [x] Model download consent button
+  - [x] Storage permission request
+  - [x] Initial user preferences (name, tone preference)
+- [x] Persist onboarding completion in `SharedPreferences`
 
 ### 1.4 LLM Engine Integration (dart:ffi → llama.cpp)
-- [ ] Create `lib/native/llama_ffi_bindings.dart`
-  - [ ] Define FFI struct bindings: `llama_context_params`, `llama_model_params`, etc.
-  - [ ] Bind core functions: `llama_model_load`, `llama_new_context`, `llama_decode`, `llama_token_to_piece`
-  - [ ] Session lifecycle: init → load → generate → cleanup
-  - [ ] Run inference in Dart `Isolate` to keep UI thread free
-- [ ] Create `lib/services/model_manager.dart`
-  - [ ] Model catalog: list available GGUF models (SmolLM2-1.7B Q4, etc.)
-  - [ ] Download model from HuggingFace via `dio` with:
-    - [ ] Progress callback (for download progress bar)
-    - [ ] Resume support (range headers)
-    - [ ] SHA-256 integrity check after download
-  - [ ] Model storage in `getApplicationDocumentsDirectory()/models/`
-  - [ ] Delete model, check available storage
-  - [ ] Model metadata persistence in SQLite
-- [ ] Create `lib/services/llm_service.dart`
-  - [ ] Singleton service wrapping FFI bindings
-  - [ ] `Stream<String> generateResponse(String prompt, {int maxTokens})` — streaming tokens
-  - [ ] Load/unload model lifecycle (manage ~1 GB memory)
-  - [ ] System prompt injection
-  - [ ] Context window management (sliding window over last N messages)
-  - [ ] Temperature, top-p, repetition penalty controls
-  - [ ] Error handling: OOM, corrupted model, generation timeout
-- [ ] Create `lib/services/prompt_builder.dart`
-  - [ ] Convert `List<Message>` → formatted prompt (ChatML / Llama-3 format)
-  - [ ] Inject system prompt (base + personalization)
-  - [ ] Context window trimming (fit within model's max context)
-  - [ ] Token counting utility
+- [x] Create `lib/native/llama_ffi_bindings.dart`
+  - [x] Define FFI struct bindings: `llama_context_params`, `llama_model_params`, etc.
+  - [x] Bind core functions: `llama_model_load`, `llama_new_context`, `llama_decode`, `llama_token_to_piece`
+  - [x] Session lifecycle: init → load → generate → cleanup
+  - [x] Run inference in Dart `Isolate` to keep UI thread free
+- [x] Create `lib/services/model_manager.dart`
+  - [x] Model catalog: list available GGUF models (SmolLM2-1.7B Q4, etc.)
+  - [x] Download model from HuggingFace via `dio` with:
+    - [x] Progress callback (for download progress bar)
+    - [x] Resume support (range headers)
+    - [x] SHA-256 integrity check after download
+  - [x] Model storage in `getApplicationDocumentsDirectory()/models/`
+  - [x] Delete model, check available storage
+  - [x] Model metadata persistence in SQLite
+- [x] Create `lib/services/llm_service.dart`
+  - [x] Singleton service wrapping FFI bindings
+  - [x] `Stream<String> generateResponse(String prompt, {int maxTokens})` — streaming tokens
+  - [x] Load/unload model lifecycle (manage ~1 GB memory)
+  - [x] System prompt injection
+  - [x] Context window management (sliding window over last N messages)
+  - [x] Temperature, top-p, repetition penalty controls
+  - [x] Error handling: OOM, corrupted model, generation timeout
+- [x] Create `lib/services/prompt_builder.dart`
+  - [x] Convert `List<Message>` → formatted prompt (ChatML / Llama-3 format)
+  - [x] Inject system prompt (base + personalization)
+  - [x] Context window trimming (fit within model's max context)
+  - [x] Token counting utility
 
 ### 1.5 Local Database (Encrypted)
-- [ ] Create `lib/database/database_helper.dart`
-  - [ ] Initialize SQLCipher-encrypted SQLite
-  - [ ] Key derivation from `flutter_secure_storage`
-  - [ ] Schema creation:
-    - [ ] `conversations` (id TEXT PK, title TEXT, created_at INTEGER, updated_at INTEGER)
-    - [ ] `messages` (id TEXT PK, conversation_id TEXT FK, role TEXT, content TEXT, timestamp INTEGER)
-    - [ ] `user_profile` (key TEXT PK, value TEXT) — style preferences
-    - [ ] `training_logs` (id INTEGER PK, started_at INTEGER, completed_at INTEGER, epochs INTEGER, loss REAL, adapter_path TEXT)
-    - [ ] `model_metadata` (id TEXT PK, name TEXT, path TEXT, size_bytes INTEGER, sha256 TEXT, downloaded_at INTEGER)
-  - [ ] Migration support (version tracking)
-- [ ] Create `lib/database/chat_repository.dart`
-  - [ ] Create/read/update/delete conversations
-  - [ ] Insert/fetch messages by conversation (paginated)
-  - [ ] Full-text search across messages
-  - [ ] Export messages as training-ready JSONL (local only)
-  - [ ] Count messages per conversation (for FL weight calculation)
+- [x] Create `lib/database/database_helper.dart`
+  - [x] Initialize SQLCipher-encrypted SQLite
+  - [x] Key derivation from `flutter_secure_storage`
+  - [x] Schema creation:
+    - [x] `conversations` (id TEXT PK, title TEXT, created_at INTEGER, updated_at INTEGER)
+    - [x] `messages` (id TEXT PK, conversation_id TEXT FK, role TEXT, content TEXT, timestamp INTEGER)
+    - [x] `user_profile` (key TEXT PK, value TEXT) — style preferences
+    - [x] `training_logs` (id INTEGER PK, started_at INTEGER, completed_at INTEGER, epochs INTEGER, loss REAL, adapter_path TEXT)
+    - [x] `model_metadata` (id TEXT PK, name TEXT, path TEXT, size_bytes INTEGER, sha256 TEXT, downloaded_at INTEGER)
+  - [x] Migration support (version tracking)
+- [x] Create `lib/database/chat_repository.dart`
+  - [x] Create/read/update/delete conversations
+  - [x] Insert/fetch messages by conversation (paginated)
+  - [x] Full-text search across messages
+  - [x] Export messages as training-ready JSONL (local only)
+  - [x] Count messages per conversation (for FL weight calculation)
 
 ### 1.6 Data Models
-- [ ] Create `lib/models/conversation.dart` — `Conversation` class
-- [ ] Create `lib/models/message.dart` — `ChatMessage` class (role, content, timestamp)
-- [ ] Create `lib/models/user_profile.dart` — `StyleProfile` class
-- [ ] Create `lib/models/model_info.dart` — `ModelInfo` class (name, path, size, status)
+- [x] Create `lib/models/conversation.dart` — `Conversation` class
+- [x] Create `lib/models/message.dart` — `ChatMessage` class (role, content, timestamp)
+- [x] Create `lib/models/user_profile.dart` — `StyleProfile` class
+- [x] Create `lib/models/model_info.dart` — `ModelInfo` class (name, path, size, status)
 
 ### 1.7 State Management (Riverpod)
-- [ ] Create `lib/providers/chat_provider.dart`
-  - [ ] `conversationListProvider` — all conversations, sorted by updated_at
-  - [ ] `activeConversationProvider` — current conversation
-  - [ ] `messagesProvider(conversationId)` — messages for a conversation
-  - [ ] `isGeneratingProvider` — whether LLM is currently generating
-- [ ] Create `lib/providers/app_provider.dart`
-  - [ ] `modelStatusProvider` — download/loaded/unloaded/error
-  - [ ] `settingsProvider` — theme, FL consent, training preferences
-  - [ ] `onboardingCompleteProvider` — whether onboarding done
+- [x] Create `lib/providers/chat_provider.dart`
+  - [x] `conversationListProvider` — all conversations, sorted by updated_at
+  - [x] `activeConversationProvider` — current conversation
+  - [x] `messagesProvider(conversationId)` — messages for a conversation
+  - [x] `isGeneratingProvider` — whether LLM is currently generating
+- [x] Create `lib/providers/app_provider.dart`
+  - [x] `modelStatusProvider` — download/loaded/unloaded/error
+  - [x] `settingsProvider` — theme, FL consent, training preferences
+  - [x] `onboardingCompleteProvider` — whether onboarding done
 
 ### 1.8 Chat Screen
-- [ ] Build `lib/screens/chat_screen.dart`
-  - [ ] Integrate `flutter_chat_ui` (`Chat` widget)
-  - [ ] Custom message bubbles with streaming text animation
-  - [ ] Typing indicator while model generates
-  - [ ] Connect "send" to LLM: send message → build prompt → stream response → display
-  - [ ] Persist all messages to SQLite on send/receive
-  - [ ] Message actions: copy, retry, delete
-  - [ ] Auto-scroll to bottom on new message
-  - [ ] Keyboard handling, auto-resize input
+- [x] Build `lib/screens/chat_screen.dart`
+  - [x] Integrate `flutter_chat_ui` (`Chat` widget)
+  - [x] Custom message bubbles with streaming text animation
+  - [x] Typing indicator while model generates
+  - [x] Connect "send" to LLM: send message → build prompt → stream response → display
+  - [x] Persist all messages to SQLite on send/receive
+  - [x] Message actions: copy, retry, delete
+  - [x] Auto-scroll to bottom on new message
+  - [x] Keyboard handling, auto-resize input
 
 ### 1.9 Chat List Screen
-- [ ] Build `lib/screens/chat_list_screen.dart`
-  - [ ] `ListView` of conversations with:
-    - [ ] Conversation title (auto-generated from first message)
-    - [ ] Last message preview + timestamp
-    - [ ] Unread indicator
-  - [ ] FAB to create new conversation
-  - [ ] Swipe-to-delete with undo snackbar
-  - [ ] Search bar to filter conversations
+- [x] Build `lib/screens/chat_list_screen.dart`
+  - [x] `ListView` of conversations with:
+    - [x] Conversation title (auto-generated from first message)
+    - [x] Last message preview + timestamp
+    - [x] Unread indicator
+  - [x] FAB to create new conversation
+  - [x] Swipe-to-delete with undo snackbar
+  - [x] Search bar to filter conversations
 
 ### 1.10 Settings Screen
-- [ ] Build `lib/screens/settings_screen.dart`
-  - [ ] **Model** section: download status, storage used, switch/delete model
-  - [ ] **Appearance**: dark/light/system theme toggle
-  - [ ] **Privacy & FL**: opt-in toggle (placeholder, wired in Phase 2)
-  - [ ] **Training**: status indicator (placeholder)
-  - [ ] **About**: version, licenses, privacy policy link
+- [x] Build `lib/screens/settings_screen.dart`
+  - [x] **Model** section: download status, storage used, switch/delete model
+  - [x] **Appearance**: dark/light/system theme toggle
+  - [x] **Privacy & FL**: opt-in toggle (placeholder, wired in Phase 2)
+  - [x] **Training**: status indicator (placeholder)
+  - [x] **About**: version, licenses, privacy policy link
 
 ### 1.11 Phase 1 Testing & Validation
-- [ ] Unit tests: `PromptBuilder`, `ChatRepository`, Riverpod providers
-- [ ] Widget tests: ChatScreen, ChatListScreen, OnboardingScreen
-- [ ] Integration test: full chat loop (send → generate → display → persist)
-- [ ] Test on Android emulator with downloaded GGUF model
-- [ ] Verify fully offline operation (airplane mode)
-- [ ] Memory profiling: model load/unload, generation (no OOM on 6 GB device)
-- [ ] `flutter analyze` passes with zero issues
+- [x] Unit tests: `PromptBuilder`, `ChatRepository`, Riverpod providers
+- [x] Widget tests: ChatScreen, ChatListScreen, OnboardingScreen
+- [x] Integration test: full chat loop (send → generate → display → persist)
+- [x] Test on Android emulator with downloaded GGUF model
+- [x] Verify fully offline operation (airplane mode)
+- [x] Memory profiling: model load/unload, generation (no OOM on 6 GB device)
+- [x] `flutter analyze` passes with zero issues
 
 ---
 
