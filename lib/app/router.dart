@@ -4,6 +4,7 @@ import '../providers/app_provider.dart';
 import '../screens/chat_list_screen.dart';
 import '../screens/chat_screen.dart';
 import '../screens/onboarding_screen.dart';
+import '../screens/privacy_dashboard_screen.dart';
 import '../screens/settings_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -30,6 +31,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/privacy',
+        builder: (context, state) => const PrivacyDashboardScreen(),
       ),
     ],
   );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../app/theme.dart';
 import '../models/model_info.dart';
 import '../providers/app_provider.dart';
@@ -50,7 +51,7 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.security),
             title: const Text("Privacy Architecture"),
             subtitle: const Text("AES-256 SQLCipher DB • DP Noise • SecAgg"),
-            onTap: () {},
+            onTap: () => context.push('/privacy'),
           ),
           const ListTile(
             leading: Icon(Icons.info_outline),
