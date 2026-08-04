@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/mahi17/Github/federated/android/app/.cxx/Debug/4q1q5w3s/x86_64",
+  "command": "/home/mahi17/development/android-sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=x86_64-none-linux-android24 --sysroot=/home/mahi17/development/android-sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dlora_trainer_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fno-limit-debug-info  -fPIC -std=gnu++17 -o CMakeFiles/lora_trainer.dir/home/mahi17/Github/federated/native/lora_trainer.cpp.o -c /home/mahi17/Github/federated/native/lora_trainer.cpp",
+  "file": "/home/mahi17/Github/federated/native/lora_trainer.cpp"
+}
+]

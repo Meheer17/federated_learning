@@ -1,0 +1,38 @@
+{
+  "buildFiles": [
+    "/home/mahi17/Github/federated/android/app/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/mahi17/development/android-sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/mahi17/Github/federated/android/app/.cxx/Debug/4q1q5w3s/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/mahi17/development/android-sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/mahi17/Github/federated/android/app/.cxx/Debug/4q1q5w3s/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "lora_trainer::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "armeabi-v7a",
+      "artifactName": "lora_trainer",
+      "output": "/home/mahi17/Github/federated/build/app/intermediates/cxx/Debug/4q1q5w3s/obj/armeabi-v7a/liblora_trainer.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/home/mahi17/development/android-sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/home/mahi17/development/android-sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

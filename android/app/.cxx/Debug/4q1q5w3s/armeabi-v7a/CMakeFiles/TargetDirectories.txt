@@ -1,0 +1,3 @@
+/home/mahi17/Github/federated/android/app/.cxx/Debug/4q1q5w3s/armeabi-v7a/CMakeFiles/lora_trainer.dir
+/home/mahi17/Github/federated/android/app/.cxx/Debug/4q1q5w3s/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/mahi17/Github/federated/android/app/.cxx/Debug/4q1q5w3s/armeabi-v7a/CMakeFiles/rebuild_cache.dir

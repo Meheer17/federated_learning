@@ -1,4 +1,4 @@
-package com.example.federated
+package com.fedchat.app
 
 import io.flutter.embedding.android.FlutterActivity
 
