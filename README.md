@@ -30,7 +30,7 @@ With your explicit consent, only tiny encrypted model updates (~1–4 MB) — no
 ## Features
 
 ### 🤖 On-Device AI Chat
-- Lightweight LLM (SmolLM2-1.7B) runs directly on your phone
+- Lightweight SLM (Gemma 3 270M) runs directly on your phone
 - Streaming token-by-token response generation
 - Fully functional **offline** — no internet needed for chat
 - Fast inference via `llama.cpp` with GPU/NNAPI/Metal acceleration

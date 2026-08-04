@@ -2,9 +2,9 @@ class AppConstants {
   static const String appName = 'FedChat';
 
   // LLM Configurations
-  static const String defaultModelName = 'SmolLM2-1.7B-Instruct-Q4_K_M.gguf';
+  static const String defaultModelName = 'gemma-3-270m-it-Q4_K_M.gguf';
   static const String defaultModelUrl =
-      'https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct-GGUF/resolve/main/smollm2-1.7b-instruct-q4_k_m.gguf';
+      'https://huggingface.co/unsloth/gemma-3-270m-it-GGUF/resolve/main/gemma-3-270m-it-Q4_K_M.gguf';
   static const int defaultContextSize = 2048;
   static const double defaultTemperature = 0.7;
   static const double defaultTopP = 0.9;

@@ -104,7 +104,7 @@ class LlamaFfiBindings {
     // Greetings
     if (q.contains('hello') || q.contains('hi') || q.contains('hey') || q.contains('greetings')) {
       return "Hello! I'm FedChat, your local AI assistant. "
-          "${isModelDownloaded ? 'I am active with your local SmolLM2 model on-device.' : 'How can I assist you today?'}\n\n"
+          "${isModelDownloaded ? 'I am active with your local Gemma 3 (270M) model on-device.' : 'How can I assist you today?'}\n\n"
           "Feel free to ask any question or start a conversation.";
     }
 
@@ -129,11 +129,11 @@ class LlamaFfiBindings {
     }
 
     // Model status queries
-    if (q.contains('model') || q.contains('smollm') || q.contains('download') || q.contains('gguf')) {
+    if (q.contains('model') || q.contains('gemma') || q.contains('smollm') || q.contains('download') || q.contains('gguf')) {
       if (isModelDownloaded) {
-        return "Your local SmolLM2 (1.7B Instruct Q4_K_M) model is downloaded and ready in device storage. All inference runs offline on your hardware.";
+        return "Your local Gemma 3 (270M Instruct Q4_K_M) model is downloaded and ready in device storage. All inference runs offline on your hardware.";
       } else {
-        return "You have not downloaded the local GGUF model file yet. You can download the SmolLM2 (1.7B) model anytime from the Settings tab for offline execution.";
+        return "You have not downloaded the local GGUF model file yet. You can download the Gemma 3 (270M) model anytime from the Settings tab for offline execution.";
       }
     }
 
