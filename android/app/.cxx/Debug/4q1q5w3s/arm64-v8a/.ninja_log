@@ -1,3 +1,4 @@
 # ninja log v5
 0	3477	1785850282329248433	CMakeFiles/lora_trainer.dir/home/mahi17/Github/federated/native/lora_trainer.cpp.o	f5f1763d73f08bc2
 3481	3591	1785850282477248440	/home/mahi17/Github/federated/build/app/intermediates/cxx/Debug/4q1q5w3s/obj/arm64-v8a/liblora_trainer.so	d8cc453ed970c611
+20	265	1785855430573459905	/home/mahi17/Github/federated/build/app/intermediates/cxx/Debug/4q1q5w3s/obj/arm64-v8a/liblora_trainer.so	d8cc453ed970c611

@@ -44,6 +44,13 @@ class ConversationsNotifier extends StateNotifier<List<Conversation>> {
     await _repository.deleteConversation(id);
     await loadConversations();
   }
+
+  Future<void> clearAllConversations() async {
+    for (final conv in state) {
+      await _repository.deleteConversation(conv.id);
+    }
+    await loadConversations();
+  }
 }
 
 final messagesProvider = StateNotifierProvider.family<MessagesNotifier, List<ChatMessage>, String>((ref, conversationId) {

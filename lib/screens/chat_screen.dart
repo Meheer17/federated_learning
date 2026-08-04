@@ -12,6 +12,36 @@ class ChatScreen extends ConsumerWidget {
 
   const ChatScreen({super.key, required this.conversationId});
 
+  void _confirmDeleteConversation(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Delete Conversation"),
+        content: const Text("Are you sure you want to delete this conversation? All messages will be permanently removed."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+            onPressed: () {
+              ref.read(conversationsProvider.notifier).deleteConversation(conversationId);
+              Navigator.of(ctx).pop();
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Conversation deleted")),
+              );
+            },
+            child: const Text("Delete"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messages = ref.watch(messagesProvider(conversationId));
@@ -60,6 +90,13 @@ class ChatScreen extends ConsumerWidget {
             Text("🔒 On-Device Offline Engine", style: TextStyle(fontSize: 11, color: AppTheme.secondaryCyan)),
           ],
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+            tooltip: "Delete Conversation",
+            onPressed: () => _confirmDeleteConversation(context, ref),
+          ),
+        ],
       ),
       body: Chat(
         messages: uiMessages,
@@ -72,3 +109,4 @@ class ChatScreen extends ConsumerWidget {
     );
   }
 }
+
